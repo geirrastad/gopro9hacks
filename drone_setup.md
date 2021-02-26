@@ -13,7 +13,8 @@ This camera sends a preview over WiFi. I have not yet found out how to get that 
 all online examples fails. Maybe this live feed has a new URL on this camera? Maybe it is no longer
 a RTSP feed? I have to figure this out
 But, plugging the camera to your RPi using USB plug is your friend. You can put the camera on
-"webcam mode" and get the live stream from UDP://172.x.x.51:8445
+"webcam mode" and get the live stream from UDP://172.x.x.51:8445. The RPi can the forward the
+UDP packes using iptables NAT PREROUTING
 
 ## GCS
 
