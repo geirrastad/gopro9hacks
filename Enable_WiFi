@@ -3,6 +3,7 @@
 Easiest: Use GoPro App
 
 This howto is for people who would like to connect a gopro h9b to a drone for streaming
+live video to QGroundGrontrol (or other GCS capable of RTSP video feed)
 
 
 ## Enable WiFi from linux (debian based)
