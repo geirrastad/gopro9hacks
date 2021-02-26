@@ -39,11 +39,94 @@ scan on
 At this point you will see the "GoPro xxx" device. Take a note of the device address,
 it should start with "FA:15:" for a GoPro 9
 
+run:
+```
+trust FA:15:xx:xx:xx:xx
+```
+
 Now go to your camera and select the Connections menu. Then press "Connect Device"
 and select "Remote"
 
 The device is now in discovery mode, and the output from scan should notify you of a change
-([CHG]) o
+It could read something like:
+```
+[CHG] Device FA:15:7A:xx:xx:xx ServicesResolved: no
+[CHG] Device FA:15:7A:xx:xx:xx Connected: no
+```
+
+Now it is time to connect and pair:
+```
+connect FA:15:7A:xx:xx:xx
+```
+
+You should then see
+```
+Attempting to connect to FA:15:7A:6E:23:60
+[CHG] Device FA:15:7A:6E:23:60 Connected: yes
+Connection successful
+```
+
+Then pair it:
+```
+pair FA:15:7A:xx:xx:xx
+```
+
+Please answer yes to this:
+```
+[agent] Accept pairing (yes/no):
+```
+
+The device should now be paired and redy to use.
+issue "disconnect" then exit the bluetoothctl
+
+## Enabling WiFi
+
+After pairing bluetooth, it's time to enable WiFi.
+gattool is your friend:
+```
+sudo gattool -t random -b FA:15:7A:xx:xx:xx -I
+```
+
+You will now get a gattool prompt. Type
+```
+connect FA:15:7A:xx:xx:xx
+```
+
+If connection is successful:
+```
+char-write-req 33 03170101
+```
+NOTE: Some GoPro examples uses 2f insted of 33, that is for previous versions of GoPro HERO. The #9 requires 33
+
+WiFi is now enabled, and you should see a "GPxxxxxxx" SSID being broadcast
+
+## Connect WiFi
+
+If you're using a GUI just connect to the "GPxxxxxxx" AP lik you would connect to any other WiFi network.
+
+The password is found in the camera menu: Connections->Camera Info
+
+To manually connect on a headless RPi or similar you must edit the 
+/etc/wpa_supplicant/wpa_supplicant.conf file and add this in the bottom of the file:
+```
+network={
+	ssid="GPxxxxxxxx"
+	psk="<the-cam-pwd>"
+}
+```
+
+If the file doesn't exist on  a RPi, you must run the raspi-config and enable WiFi. 
+You might as well use that tool to connect to the GoPro.
+
+To bring the WiFi up run this command:
+```
+wpa_cli -i wlan0 reconfigure
+```
+
+Wait..... et voila, you should have a wlan0 interface with an IP address of 10.5.5.x (probably .100)
+
+
+
 
 
 
